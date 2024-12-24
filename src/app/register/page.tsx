@@ -14,12 +14,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { passwordMatch } from "@/validation/passwordMatchSchema";
 
 const formSchema = z.object({
     email: z.string().email(),
-    password: z.string().min(5).max(20),
-    passwordConfirm: z.string(),
-});
+}).and(passwordMatch)
 
 const RegisterPage: React.FC = () => {
     const form = useForm<z.infer<typeof formSchema>>({
@@ -43,7 +42,7 @@ const RegisterPage: React.FC = () => {
 
                 <CardContent>
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(handleSubmit)}>
+                        <form onSubmit={form.handleSubmit(handleSubmit)} className="flex flex-col gap-2">
                             <FormField control={form.control} name='email' render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>
