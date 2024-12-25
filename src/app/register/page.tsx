@@ -15,6 +15,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { passwordMatch } from "@/validation/passwordMatchSchema";
+import { registerUser } from "./actions";
 
 const formSchema = z.object({
     email: z.string().email(),
@@ -30,7 +31,10 @@ const RegisterPage: React.FC = () => {
         },
     });
 
-    const handleSubmit = async (data: z.infer<typeof formSchema>) => { };
+    const handleSubmit = async (data: z.infer<typeof formSchema>) => {
+        const response = await registerUser(data);
+        console.log(response);
+    };
 
     return (
         <main className="flex justify-center items-center min-h-screen">
