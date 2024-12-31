@@ -1,55 +1,30 @@
 "use client";
 
-import React from "react";
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { passwordMatch } from "@/validation/passwordMatchSchema";
-import { registerUser } from "./actions";
-import Link from "next/link";
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { passwordSchema } from '@/validation/passwordSchema'
+import { zodResolver } from '@hookform/resolvers/zod';
+import Link from 'next/link'
+import React from 'react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
-const formSchema = z
-	.object({
-		email: z.string().email(),
-	})
-	.and(passwordMatch);
 
-const RegisterPage: React.FC = () => {
-	const form = useForm<z.infer<typeof formSchema>>({
-		resolver: zodResolver(formSchema),
+const formschema = z.object({
+	email: z.string().email(),
+	password: passwordSchema,
+});
+
+const Login: React.FC = () => {
+	const form = useForm<z.infer<typeof formschema>>({
+		resolver: zodResolver(formschema),
 		defaultValues: {
-			email: "",
-			password: "",
-			passwordConfirm: "",
-		},
-	});
-
-	const handleSubmit = async (data: z.infer<typeof formSchema>) => {
-		const response = await registerUser(data);
-
-		if (response?.error) {
-			form.setError("email", {
-				message: response?.message,
-			});
+			email: '',
+			password: '',
 		}
-	};
+	});
 
 	return (
 		<main className="flex justify-center items-center min-h-screen">
@@ -126,7 +101,7 @@ const RegisterPage: React.FC = () => {
 				</Card>
 			)}
 		</main>
-	);
-};
+	)
+}
 
-export default RegisterPage;
+export default Login
