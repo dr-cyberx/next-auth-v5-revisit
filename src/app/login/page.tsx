@@ -1,16 +1,31 @@
 "use client";
 
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import { passwordSchema } from '@/validation/passwordSchema'
-import { zodResolver } from '@hookform/resolvers/zod';
-import Link from 'next/link'
-import React from 'react'
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
-
+import { Button } from "@/components/ui/button";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { passwordSchema } from "@/validation/passwordSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
+import React from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { loginWithCredentials } from "./action";
+import { useRouter } from "next/navigation";
 
 const formschema = z.object({
 	email: z.string().email(),
@@ -18,13 +33,29 @@ const formschema = z.object({
 });
 
 const Login: React.FC = () => {
+	const router = useRouter();
 	const form = useForm<z.infer<typeof formschema>>({
 		resolver: zodResolver(formschema),
 		defaultValues: {
-			email: '',
-			password: '',
-		}
+			email: "",
+			password: "",
+		},
 	});
+
+	const handleSubmit = async (data: z.infer<typeof formschema>) => {
+		const response = await loginWithCredentials({
+			email: data.email,
+			password: data.password,
+		});
+
+		if (response?.error) {
+			form.setError("root", {
+				message: response.message,
+			});
+		} else {
+			router.push("/my-account");
+		}
+	};
 
 	return (
 		<main className="flex justify-center items-center min-h-screen">
@@ -43,8 +74,8 @@ const Login: React.FC = () => {
 			) : (
 				<Card className="min-w-[350px]">
 					<CardHeader>
-						<CardTitle>Register</CardTitle>
-						<CardDescription>Register for a new account.</CardDescription>
+						<CardTitle>Login</CardTitle>
+						<CardDescription>Login to your account.</CardDescription>
 					</CardHeader>
 
 					<CardContent>
@@ -80,28 +111,29 @@ const Login: React.FC = () => {
 											</FormItem>
 										)}
 									/>
-									<FormField
-										control={form.control}
-										name="passwordConfirm"
-										render={({ field }) => (
-											<FormItem>
-												<FormLabel>Confirm password</FormLabel>
-												<FormControl>
-													<Input {...field} type="password" />
-												</FormControl>
-												<FormMessage />
-											</FormItem>
-										)}
-									/>
+									{!!form.formState.errors.root && (
+										<FormMessage>
+											{form.formState.errors.root.message}
+										</FormMessage>
+									)}
 									<Button type="submit">Submit</Button>
 								</fieldset>
 							</form>
 						</Form>
 					</CardContent>
+
+					<CardFooter className="flex-col gap-2">
+						<div className="text-muted-foreground text-sm">
+							Don&apos;t have account? <Link href={"/register"} className="underline">Register</Link>
+						</div>
+						<div className="text-muted-foreground text-sm">
+							Forgot password? <Link href={"/register"} className="underline">Reset my password</Link>
+						</div>
+					</CardFooter>
 				</Card>
 			)}
 		</main>
-	)
-}
+	);
+};
 
-export default Login
+export default Login;
