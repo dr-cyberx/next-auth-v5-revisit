@@ -2,7 +2,7 @@
 
 import { passwordSchema } from "@/validation/passwordSchema";
 import { z } from "zod";
-import { signIn } from "../../../auth";
+import { signIn } from "../../../../auth";
 
 export const loginWithCredentials = async ({
   email,
