@@ -127,7 +127,7 @@ const Login: React.FC = () => {
 							Don&apos;t have account? <Link href={"/register"} className="underline">Register</Link>
 						</div>
 						<div className="text-muted-foreground text-sm">
-							Forgot password? <Link href={"/register"} className="underline">Reset my password</Link>
+							Forgot password? <Link href={"/password-reset"} className="underline">Reset my password</Link>
 						</div>
 					</CardFooter>
 				</Card>
