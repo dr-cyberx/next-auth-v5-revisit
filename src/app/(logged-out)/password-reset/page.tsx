@@ -23,20 +23,27 @@ import { Input } from "@/components/ui/input";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { passwordResetAction } from "./actions";
 
 const formSchema = z.object({
     email: z.string().email(),
 });
 
 const PasswordReset = () => {
+    const searchParams = useSearchParams()
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            email: "",
+            email: searchParams.get("email") || "",
         },
     });
 
-    const handleSubmit = async (data: z.infer<typeof formSchema>) => { };
+    const handleSubmit = async (data: z.infer<typeof formSchema>) => {
+        const resetPassword = await passwordResetAction({
+            email: data.email,
+        })
+    };
 
     return (
         <main className="flex justify-center items-center min-h-screen">
