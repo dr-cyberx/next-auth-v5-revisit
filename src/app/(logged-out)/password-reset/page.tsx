@@ -31,7 +31,7 @@ const formSchema = z.object({
 });
 
 const PasswordReset = () => {
-    const searchParams = useSearchParams()
+    const searchParams = useSearchParams();
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -42,56 +42,74 @@ const PasswordReset = () => {
     const handleSubmit = async (data: z.infer<typeof formSchema>) => {
         const resetPassword = await passwordResetAction({
             email: data.email,
-        })
+        });
     };
 
     return (
         <main className="flex justify-center items-center min-h-screen">
-            <Card className="min-w-[350px]">
-                <CardHeader>
-                    <CardTitle>Password Reset</CardTitle>
-                    <CardDescription>
-                        Enter your email to reset your password.
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <Form {...form}>
-                        <form onSubmit={form.handleSubmit(handleSubmit)}>
-                            <fieldset
-                                disabled={form.formState.isSubmitting}
-                                className="flex flex-col gap-2"
-                            >
-                                <FormField
-                                    control={form.control}
-                                    name="email"
-                                    render={({ field }) => (
-                                        <FormItem>
-                                            <FormLabel>Email</FormLabel>
-                                            <FormControl>
-                                                <Input {...field} type="email" />
-                                            </FormControl>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-                                {!!form.formState.errors.root && (
-                                    <FormMessage>{form.formState.errors.root.message}</FormMessage>
-                                )}
-                                <Button type="submit">Submit</Button>
-                            </fieldset>
-                        </form>
-                    </Form>
-                </CardContent>
+            {form.formState.isSubmitSuccessful ? (
+                <Card className="w-[350px]">
+                    <CardHeader>
+                        <CardTitle>Email sent !</CardTitle>
 
-                <CardFooter className="flex-col gap-2">
-                    <div className="text-muted-foreground text-sm">
-                        Remember your password? <Link href={"/login"} className="underline">login</Link>
-                    </div>
-                    <div className="text-muted-foreground text-sm">
-                        Don&apos;t have account? <Link href={"/register"} className="underline">Register</Link>
-                    </div>
-                </CardFooter>
-            </Card>
+                    </CardHeader>
+                    <CardContent>If you have account with us you will receive a password reset email at : {form.getValues('email')} </CardContent>
+                </Card>
+            ) : (
+                <Card className="w-[350px]">
+                    <CardHeader>
+                        <CardTitle>Password Reset</CardTitle>
+                        <CardDescription>
+                            Enter your email to reset your password.
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <Form {...form}>
+                            <form onSubmit={form.handleSubmit(handleSubmit)}>
+                                <fieldset
+                                    disabled={form.formState.isSubmitting}
+                                    className="flex flex-col gap-2"
+                                >
+                                    <FormField
+                                        control={form.control}
+                                        name="email"
+                                        render={({ field }) => (
+                                            <FormItem>
+                                                <FormLabel>Email</FormLabel>
+                                                <FormControl>
+                                                    <Input {...field} type="email" />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                    {!!form.formState.errors.root && (
+                                        <FormMessage>
+                                            {form.formState.errors.root.message}
+                                        </FormMessage>
+                                    )}
+                                    <Button type="submit">Submit</Button>
+                                </fieldset>
+                            </form>
+                        </Form>
+                    </CardContent>
+
+                    <CardFooter className="flex-col gap-2">
+                        <div className="text-muted-foreground text-sm">
+                            Remember your password?{" "}
+                            <Link href={"/login"} className="underline">
+                                login
+                            </Link>
+                        </div>
+                        <div className="text-muted-foreground text-sm">
+                            Don&apos;t have account?{" "}
+                            <Link href={"/register"} className="underline">
+                                Register
+                            </Link>
+                        </div>
+                    </CardFooter>
+                </Card>
+            )}
         </main>
     );
 };
