@@ -51,9 +51,11 @@ const PasswordReset = () => {
                 <Card className="w-[350px]">
                     <CardHeader>
                         <CardTitle>Email sent !</CardTitle>
-
                     </CardHeader>
-                    <CardContent>If you have account with us you will receive a password reset email at : {form.getValues('email')} </CardContent>
+                    <CardContent>
+                        If you have account with us you will receive a password reset email
+                        at : {form.getValues("email")}{" "}
+                    </CardContent>
                 </Card>
             ) : (
                 <Card className="w-[350px]">
