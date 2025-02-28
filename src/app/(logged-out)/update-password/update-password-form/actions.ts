@@ -65,14 +65,15 @@ export const updatePasswordFormActions = async ({
     }
 
     const hashedPassword = await hash(password, 10);
-    const res = await db
+    await db
       .update(users)
-      .set({ password: hashedPassword })
-      .where(eq(users.id, passwordResetToken?.id));
-    console.log({ res });
+      .set({
+        password: hashedPassword,
+      })
+      .where(eq(users.id, passwordResetToken.userId!));
 
     await db
       .delete(passwordResetTokenSchema)
-      .where(eq(passwordResetTokenSchema.id, passwordResetToken?.id));
+      .where(eq(passwordResetTokenSchema.id, passwordResetToken.id));
   }
 };
